@@ -1,0 +1,7 @@
+{
+"version": 3,
+"mappings": "AAAA,CAAE;EACA,WAAW,EAAE,qBAAqB;;AAGpC,sBAAuB;EACrB,WAAW,EAAE,wBAAwB;;AAIrC,YAAS;EACP,eAAe,EAAE,QAAQ;EAEzB,gCAAO;IACL,MAAM,EAAE,cAAc;IACtB,UAAU,EAAE,IAAI;IAChB,OAAO,EAAE,OAAO",
+"sources": ["angular.component.scss"],
+"names": [],
+"file": "angular.component.css"
+}
