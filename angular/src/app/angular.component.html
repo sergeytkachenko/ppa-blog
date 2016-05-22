@@ -86,14 +86,12 @@
       <li>
         Для всех моделей, с которыми вы хотите работать через REST, необходимо добавить trait,
         который расширяет ваши модели для работы с PPA. Например:
-        <strong>
-          <pre><code class="language-php">
-            class Brands extends \Phalcon\Mvc\Model
-            {
-              use \PPA\Rest\Model\BaseModel;
-              ....
-          </code>/</pre>
-        </strong>
+        <pre><code class="language-php">
+          class Brands extends \Phalcon\Mvc\Model
+          {
+            use \PPA\Rest\Model\BaseModel;
+            ....
+        </code></pre>
       </li>
       <li>
         Создать отдельный модуль, например под названием ppa, в котором будет находиться один единственный контоллер,
@@ -103,36 +101,32 @@
       </li>
       <li>
         В ранее созданом модуле создать BaseController который наследуеться от PPA\Rest\PpaController, с таким кодом:
-        <strong>
-          <pre><code class="language-php">
-            namespace Multiple\PPA\Controllers;
+        <pre><code class="language-php">
+          namespace Multiple\PPA\Controllers;
 
-            use PPA\Rest\PpaController;
-            use Phalcon\Mvc\Dispatcher;
+          use PPA\Rest\PpaController;
+          use Phalcon\Mvc\Dispatcher;
 
-            class BaseController extends PpaController
-            {
-              /**
-               * @overridden
-               */
-              public function crudAction() {
-                return parent::crudAction();
-              }
+          class BaseController extends PpaController
+          {
+            /**
+             * @overridden
+             */
+            public function crudAction() {
+              return parent::crudAction();
             }
-          </code></pre>
-        </strong>
+          }
+        </code></pre>
       </li>
       <li>
         В роутере настроить все запросы вида /api/ppa/* в ранее созданый контроллер:
-        <strong>
-          <pre><code class="language-php">
+          <pre class="language-php"><code>
             $router->add("/ppa/[a-zA-Z0-9/]+", array(
               'module'     => 'ppa',
               'controller' => 'base',
               'action'     => 'crud'
             ));
           </code></pre>
-        </strong>
         Где /api адрес вашего backend приложения, а /ppa адрес метода crudAction BaseController'а.
       </li>
     </ul><br>
@@ -200,5 +194,4 @@
     </ul>
   </md-card-content>
 </md-card>
-<script src="vendor/prismjs/prism.js" data-manual></script>
 

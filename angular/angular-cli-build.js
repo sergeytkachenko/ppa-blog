@@ -11,8 +11,6 @@ module.exports = function(defaults) {
       'es6-shim/es6-shim.js',
       'reflect-metadata/*.js',
       'rxjs/**/*.js',
-      'prismjs/prism.js',
-      'prismjs/themes/*.css',
       '@angular/**/*.js',
       '@angular2-material/**/*.js'
     ]
