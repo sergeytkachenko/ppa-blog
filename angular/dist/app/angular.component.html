@@ -1,0 +1,197 @@
+<toolbar></toolbar>
+<md-card>
+  <md-card-title>Что такое PPA, какой принцип работы, зачем его использовать?</md-card-title>
+  <md-card-content>
+    <md-card-subtitle>Идея зарождения Phalcon Persistence Api </md-card-subtitle>
+    <p>Аббревиатура PPA появилась как альтернатива
+      <a href="http://docs.spring.io/spring-data/jpa/docs/current/reference/html/">JPA</a> из мира Java Spring.</p>
+    <p>
+      В Spring JPA очень удобно реализован REST, который анализирует url адресс запроса и делает соответсвующие
+      запросы в модели БД. Подробнее можно посмотреть в соответствующей
+      <a href="http://docs.spring.io/spring-data/jpa/docs/current/reference/html/#jpa.query-methods.query-creation">
+        таблице</a> в оффицеальной документации сайта spring.
+    </p>
+    <p>
+      PPA расшифровываеться как <strong>Phalcon Persistence Api</strong>. Технология, которая на вход принимает url
+      запрос, в результате которого осуществляет <strong>CRUD операции над ORM моделями php phalcon фраемворка</strong>.
+    </p>
+    <md-card-subtitle>Принцип работы PPA</md-card-subtitle>
+    <p>
+      Данный модуль умеет получать на вход HTTP Request, анализировать его по определенным правилам и совершать различные
+      операции над моделями phalcon, и конечно же, возвращать результат выполненой операции в json виде. Например делать
+      разнообразную выборку, из указаной в url адресе модели, или создавать, менять, удалять ее. <strong>А также менять
+      связи этой модели, если это необходимо</strong>.
+    </p>
+    <md-card-subtitle>Ситуации, в которых вам может понадобиться PPA</md-card-subtitle>
+    <p>
+      Если вы используете frontend отрисовку html контента, например разрабатываете на angular, backbone, react или на
+      подобных js фраемворках, то вам конечно же нужны будут данные для отображения контента. Frontend приложению
+      нужно ходить на сервер в поисках данных. Для решения такой задачи, в большинстве случаев используеться,
+      так называемый народный REST. Смысл которого реализовывать различные api сервисы по мере их необходимости.
+      Таким образом frontend разработчику помимо разработки на frontend,
+      прийдеться реализовывать api сервисы на backend, что бы получать необходимые данные для отрисовки со стороны браузера.
+      Это конечно же не всем по душе, и на это уходит не мало полезного времени разработчика.
+    </p>
+    <p>
+      <strong>
+        Phalcon Persistence Api избавляет разработчика от реализации серверной выборки данных, а также записи и удаления.
+      </strong>
+      Вам достаточно один раз настроить ваше приложение для работы с PPA, разобраться с простым языком запросов и наслаждатся
+      frontend разработкой. Всю остальную логику CRUD операций с данными сделает за вас данный модуль.
+    </p>
+    <br>
+  </md-card-content>
+  <md-card-title>Что нужно что бы PPA работал на вашем проэкте?</md-card-title>
+  <md-card-content>
+    <md-card-subtitle>Минимальные требования</md-card-subtitle>
+    <ul>
+      <li>PHP 5.6</li>
+      <li>Phalcon 2.0.10</li>
+      <li>Используете Phalcon Model (<small>так, как PPA работает исключительно с моделями</small>)</li>
+      <li>Наличие в проэкте PHP Composer</li>
+      <li>
+        В БД используеться знак <strong><code>_</code></strong> для разделения названия таблиц, а также стобцов таблиц.
+        Например <strong>last_name</strong>, вместо camelCase <strong><strike>LastName</strike></strong>.
+        Если вы используете camelCase правило для БД, у вас PPA работать не будет.
+      </li>
+      <li>
+        На данный момент потдержка только MYSQL базы данных.
+      </li>
+      <li>Не реализована потдержка связи many to many.</li>
+    </ul><br>
+    <md-card-title>Установка и настройка</md-card-title>
+    <ul>
+      <li>
+        Создайте файл <strong>composer.json</strong>, или добавте в него следующее содержимое:
+        <strong><pre><code class="language-json">
+          {
+            "repositories": [
+              {
+                "url": "https://github.com/sergeytkachenko/phalcon-rest-jpa.git",
+                "type": "git"
+              }
+            ],
+            "require": {
+              "stkachenko/ppa": "dev-master",
+            }
+          }
+        </code></pre></strong>
+      </li>
+      <li>
+        Далее необходимо загрузить сам PPA из github, делаеться это следуюшей командой:
+        <strong>
+          <pre>php composer.phar install</pre>
+        </strong>
+      </li>
+      <li>
+        Для всех моделей, с которыми вы хотите работать через REST, необходимо добавить trait,
+        который расширяет ваши модели для работы с PPA. Например:
+        <pre><code class="language-php">
+          class Brands extends \Phalcon\Mvc\Model
+          {
+            use \PPA\Rest\Model\BaseModel;
+            ....
+        </code></pre>
+      </li>
+      <li>
+        Создать отдельный модуль, например под названием ppa, в котором будет находиться один единственный контоллер,
+        коорый будет перенаправлять свои запросы на PPA.
+        <a href="https://docs.phalconphp.com/en/latest/reference/applications.html">Подробнее</a>
+        как создать новый модуль смотрите на оф. сайте phalcon.
+      </li>
+      <li>
+        В ранее созданом модуле создать BaseController который наследуеться от PPA\Rest\PpaController, с таким кодом:
+        <pre><code class="language-php">
+          namespace Multiple\PPA\Controllers;
+
+          use PPA\Rest\PpaController;
+          use Phalcon\Mvc\Dispatcher;
+
+          class BaseController extends PpaController
+          {
+            /**
+             * @overridden
+             */
+            public function crudAction() {
+              return parent::crudAction();
+            }
+          }
+        </code></pre>
+      </li>
+      <li>
+        В роутере настроить все запросы вида /api/ppa/* в ранее созданый контроллер:
+          <pre class="language-php"><code>
+            $router->add("/ppa/[a-zA-Z0-9/]+", array(
+              'module'     => 'ppa',
+              'controller' => 'base',
+              'action'     => 'crud'
+            ));
+          </code></pre>
+        Где /api адрес вашего backend приложения, а /ppa адрес метода crudAction BaseController'а.
+      </li>
+    </ul><br>
+    <md-card-title>Список реализованого api</md-card-title>
+    <table class="border"><thead>
+    <tr>
+      <th>Операция</th>
+      <th>Пример</th>
+      <th>JPQL snippet</th>
+    </tr>
+    </thead><tbody>
+    <tr>
+      <td><em>Fetch all</em></td>
+      <td>/api/ppa/brands/s/</td>
+      <td>Вернет все бренды</td>
+    </tr>
+    <tr>
+      <td><em>Fetch first</em></td>
+      <td>/api/ppa/brands/</td>
+      <td>Вернет первый, попавшийся бренд</td>
+    </tr>
+    <tr>
+      <td><em>And</em></td>
+      <td>/api/ppa/brands/findByIdAndTitle</td>
+      <td><pre>… where x.id = :id: AND x.title = :title:</pre></td>
+    </tr>
+    <tr>
+      <td><em>Or</em></td>
+      <td>/api/ppa/brands/findByIdOrTitle</td>
+      <td><pre>… where x.id = :id: OR x.title = :title:</pre></td>
+    </tr>
+    <tr>
+      <td><em>Like</em></td>
+      <td>/api/ppa/clients/findByNameLike</td>
+      <td><pre>… where x.name LIKE :name:</pre></td>
+    </tr>
+    <tr>
+      <td><em>Containing</em></td>
+      <td>/api/ppa/clients/findByTitleContaining</td>
+      <td><pre>… where x.title LIKE :lastName: (where :lastName: =  %lastName%)</pre></td>
+    </tr>
+    <tr>
+      <td><em>StartingWith</em></td>
+      <td>/api/ppa/clients/findByTitleStartingWith</td>
+      <td><pre>… where x.title LIKE :lastName: (where :lastName:  = lastName%)</pre></td>
+    </tr>
+    <tr>
+      <td><em>search</em> (without columns)</td>
+      <td>/api/ppa/clients/search</td>
+      <td><pre>… where x.name LIKE %:searchVal:% OR x.lastName LIKE %:searchVal:%</pre></td>
+    </tr>
+    <tr>
+      <td><em>search</em> (with columns)</td>
+      <td>/api/ppa/clients/search</td>
+      <td><pre>… where x.name LIKE %:searchVal:%.</pre></td>
+    </tr>
+    </tbody></table><br>
+
+    <md-card-title>Планы по развитию PPA 2.0</md-card-title>
+    <ul>
+      <li>Потдержка связи many to many.</li>
+      <li>Контроль доступа API, делегирование прав на CRUD операции.</li>
+      <li>Логирование оперций.</li>
+      <li>Оптимизация сохранения внешних связей.</li>
+    </ul>
+  </md-card-content>
+</md-card>
+

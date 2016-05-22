@@ -1,0 +1,14 @@
+* {
+  font-family: 'PT Sans', sans-serif; }
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Droid Sans', sans-serif; }
+
+table.border {
+  border-collapse: collapse; }
+  table.border th, table.border td {
+    border: 1px solid #333;
+    text-align: left;
+    padding: 3px 5px; }
+
+/*# sourceMappingURL=angular.component.css.map */
